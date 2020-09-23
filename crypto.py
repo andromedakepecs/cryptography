@@ -1,13 +1,34 @@
+
+# Andromeda Kepecs 
+# Redmond Block C
+# September 22, 2020
+
 # Caesar Cipher
 # Arguments: string, integer
 # Returns: string
 def encrypt_caesar(plaintext, offset):
-    pass
+    newString = ''
+    for letter in plaintext:
+        unicode = ord(letter)
+        if unicode + offset > 90:
+            newCode = unicode + offset - 26
+        else:
+            newCode = unicode + offset
+        newString += chr(newCode)
+    return newString
 
 # Arguments: string, integer
 # Returns: string
 def decrypt_caesar(ciphertext, offset):
-    pass
+    newString = ''
+    for letter in ciphertext:
+        unicode = ord(letter)
+        if unicode - offset < 65:
+            newCode = unicode - offset + 26
+        else:
+            newCode = unicode - offset
+        newString += chr(newCode)
+    return newString
 
 # Vigenere Cipher
 # Arguments: string, string
@@ -43,7 +64,6 @@ def decrypt_mhkc(ciphertext, private_key):
 
 def main():
     # Testing code here
-    pass
 
 if __name__ == "__main__":
     main()
