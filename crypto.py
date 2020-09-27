@@ -1,4 +1,3 @@
-
 # Andromeda Kepecs 
 # Redmond Block C
 # September 22, 2020
@@ -9,11 +8,11 @@
 def encrypt_caesar(plaintext, offset):
     newString = ''
     for letter in plaintext:
-        unicode = ord(letter)
-        if unicode + offset > 90:
-            newCode = unicode + offset - 26
+        textCode = ord(letter)
+        if textCode + offset > 90:
+            newCode = textCode + offset - 26
         else:
-            newCode = unicode + offset
+            newCode = textCode + offset
         newString += chr(newCode)
     return newString
 
@@ -22,11 +21,11 @@ def encrypt_caesar(plaintext, offset):
 def decrypt_caesar(ciphertext, offset):
     newString = ''
     for letter in ciphertext:
-        unicode = ord(letter)
-        if unicode - offset < 65:
-            newCode = unicode - offset + 26
+        textCode = ord(letter)
+        if textCode - offset < 65:
+            newCode = textCode - offset + 26
         else:
-            newCode = unicode - offset
+            newCode = textCode - offset
         newString += chr(newCode)
     return newString
 
@@ -34,12 +33,28 @@ def decrypt_caesar(ciphertext, offset):
 # Arguments: string, string
 # Returns: string
 def encrypt_vigenere(plaintext, keyword):
-    pass
+    newString = ''
+    for i in range(len(plaintext)):
+        textCode = ord(plaintext[i])
+        offset = ord(keyword[i]) - 65
+        newCode = textCode + offset
+        if newCode > 90:
+            newCode -= 26
+        newString += chr(newCode)
+    return newString
 
 # Arguments: string, string
 # Returns: string
 def decrypt_vigenere(ciphertext, keyword):
-    pass
+    newString = ''
+    for i in range(len(ciphertext)):
+        textCode = ord(ciphertext[i])
+        offset = ord(keyword[i]) - 65
+        newCode = textCode - offset
+        if newCode < 65:
+            newCode += 26
+        newString += chr(newCode)
+    return newString
 
 # Merkle-Hellman Knapsack Cryptosystem
 # Arguments: integer
@@ -63,7 +78,7 @@ def decrypt_mhkc(ciphertext, private_key):
     pass
 
 def main():
-    # Testing code here
+    
 
 if __name__ == "__main__":
     main()
