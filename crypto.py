@@ -37,28 +37,44 @@ def decrypt_caesar(ciphertext, offset):
 # Returns: string
 def encrypt_vigenere(plaintext, keyword):
     newString = ''
-    # need newKey
-    for i in range(len(plaintext)):
-        textCode = ord(plaintext[i])
-        offset = ord(keyword[i]) - 65
+    keyword_index = 0
+
+    for letter in plaintext:
+        textCode = ord(letter)
+        offset = ord(keyword[keyword_index]) - 65
         newCode = textCode + offset
         if newCode > 90:
             newCode -= 26
         newString += chr(newCode)
+
+        if (keyword_index + 1) == len(keyword):
+            keyword_index = 0
+        else: 
+            keyword_index += 1
+
     return newString
+
+
 
 # Arguments: string, string
 # Returns: string
 def decrypt_vigenere(ciphertext, keyword):
     newString = ''
-    # need newKey
-    for i in range(len(ciphertext)):
-        textCode = ord(ciphertext[i])
-        offset = ord(keyword[i]) - 65
+    keyword_index = 0
+
+    for letter in ciphertext:
+        textCode = ord(letter)
+        offset = ord(keyword[keyword_index]) - 65
         newCode = textCode - offset
         if newCode < 65:
             newCode += 26
         newString += chr(newCode)
+
+        if (keyword_index + 1) == len(keyword):
+            keyword_index = 0
+        else: 
+            keyword_index += 1
+
     return newString
 
 # Merkle-Hellman Knapsack Cryptosystem
@@ -67,20 +83,12 @@ def decrypt_vigenere(ciphertext, keyword):
 def generate_private_key(n=8):
     W = []
     total = 5 #arbitrary number greater than 2 so randint works
-    for i in range(0, n - 1):
+    for i in range(0, n):
         W.append(random.randint(total + 1, total * 2))
-        print("w at i")
-        print(W[i])
         total += W[i]
-        print("total")
-        print(total)
 
     Q = random.randint(total + 1, total * 2)
-    print("q")
-    print(Q)
     R = gen_coprime(Q)
-    print("r")
-    print(R)
 
     return W, Q, R
 
@@ -95,9 +103,11 @@ def gen_coprime(Q):
 def create_public_key(private_key):
     W, Q, R = private_key
     B = []
+    
     for i in W:
-        B[i] = (R * W[i]) % Q
-    return B
+        B.append((R * i) % Q)
+
+    return tuple(B)
 
 
 # Arguments: string, tuple (W, Q, R)
@@ -111,7 +121,9 @@ def decrypt_mhkc(ciphertext, private_key):
     pass
 
 def main():
-    generate_private_key()
+    print(decrypt_vigenere("O", "ONEINPUT"))
+    private_key = generate_private_key()
+    public_key = create_public_key(private_key)
 
 if __name__ == "__main__":
     main()
