@@ -109,11 +109,22 @@ def create_public_key(private_key):
 
     return tuple(B)
 
-
 # Arguments: string, tuple (W, Q, R)
 # Returns: list of integers
 def encrypt_mhkc(plaintext, public_key):
-    pass
+    cipher_list = []
+    for letter in plaintext:
+        binary_char = ''.join(format(ord(letter), 'b'))
+        M = []
+        M.append(0)
+        for num in binary_char:
+            M.append(int(num))
+        C = 0
+        for i in M:
+            C += M[i] * public_key[i]
+        cipher_list.append(C)
+    return cipher_list
+        
 
 # Arguments: list of integers, tuple B - a length-n tuple of integers
 # Returns: bytearray or str of plaintext
@@ -121,9 +132,10 @@ def decrypt_mhkc(ciphertext, private_key):
     pass
 
 def main():
-    print(decrypt_vigenere("O", "ONEINPUT"))
     private_key = generate_private_key()
     public_key = create_public_key(private_key)
+
+    print(encrypt_mhkc("ZEBRA", public_key))
 
 if __name__ == "__main__":
     main()
