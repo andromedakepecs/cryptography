@@ -3,7 +3,6 @@ from math import gcd
 
 # Andromeda Kepecs 
 # Redmond Block C
-# September 22, 2020
 
 # Caesar Cipher
 # Arguments: string, integer
@@ -54,8 +53,6 @@ def encrypt_vigenere(plaintext, keyword):
 
     return newString
 
-
-
 # Arguments: string, string
 # Returns: string
 def decrypt_vigenere(ciphertext, keyword):
@@ -92,6 +89,8 @@ def generate_private_key(n=8):
 
     return W, Q, R
 
+# Arguments: integer
+# Returns: coprime integer R
 def gen_coprime(Q):
     R = 2
     while gcd(R, Q) != 1:
@@ -141,25 +140,39 @@ def decrypt_mhkc(ciphertext, private_key):
         plaintext += chr(bits_to_byte(list(reversed(binary_list))))
     return plaintext
 
+# Arguments: list of bits (binary)
+# Returns: int sum (decimal)
 def bits_to_byte(bits):
    return bits[0]*128 + bits[1]*64 + bits[2]*32 + bits[3]*16 + bits[4]*8 + bits[5]*4 + bits[6]*2 + bits[7]
 
-
+# Arguments: two coprime ints
+# Returns: int modular inverse 
 def get_modular_inverse(Q, R):
     S = 0
     while (R * S) % Q != 1:
         S += 1
     return S
 
+# Testing code
 def main():
-    private_key = generate_private_key()
-    print(private_key)
-    public_key = create_public_key(private_key)
-    print(public_key)
-    encrypted = encrypt_mhkc("THEQUICKBROWNFOXJUMPSOVERTHELAZYBLUEDOG", public_key)
-    print(encrypted)
-    print(decrypt_mhkc(encrypted, private_key))
+    # Caeser
+    print('Caesar encryption: ' + encrypt_caesar("ZEBRA", 25))
+    print('Caesar decryption: ' + decrypt_caesar("YDAQZ", 25))
+    print("")
 
+    # Vigenere 
+    print('Vigenere encryption: ' + encrypt_vigenere("IMISSCODINGIN", "JAVA"))
+    print('Vigenere decryption: ' + decrypt_vigenere("RMDSBCJDRNBIW", "JAVA"))
+    print("")
+
+    # MHKC
+    private_key = generate_private_key()
+    print('Private key: ' + str(private_key))
+    public_key = create_public_key(private_key)
+    print('Public key: ' + str(public_key))
+    encrypted = encrypt_mhkc("THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG", public_key)
+    print('Encrypted: ' + str(encrypted))
+    print('Decrypted: ' + decrypt_mhkc(encrypted, private_key))
 
 if __name__ == "__main__":
     main()
