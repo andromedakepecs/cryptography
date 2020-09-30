@@ -109,33 +109,57 @@ def create_public_key(private_key):
 
     return tuple(B)
 
-# Arguments: string, tuple (W, Q, R)
+# Arguments: string, tuple B
 # Returns: list of integers
 def encrypt_mhkc(plaintext, public_key):
     cipher_list = []
     for letter in plaintext:
-        binary_char = ''.join(format(ord(letter), 'b'))
-        M = []
-        M.append(0)
-        for num in binary_char:
-            M.append(int(num))
+        binary_char = "{0:08b}".format(ord(letter))
+        
         C = 0
-        for i in M:
-            C += M[i] * public_key[i]
+        for i in range(len(binary_char)):
+            C += int(binary_char[i]) * public_key[i]
         cipher_list.append(C)
     return cipher_list
         
 
-# Arguments: list of integers, tuple B - a length-n tuple of integers
+# Arguments: list of integers, private key (W, Q, R) with W a tuple.
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
-    pass
+    plaintext = ''
+    W, Q, R = private_key
+    S = get_modular_inverse(Q, R)
+    for C in ciphertext:
+        C_prime = C * S % Q
+        binary_list = []
+        for elt in reversed(W):
+            if elt <= C_prime:
+                binary_list.append(1)
+                C_prime -= elt
+            else:
+                binary_list.append(0)
+        plaintext += chr(bits_to_byte(list(reversed(binary_list))))
+    return plaintext
+
+def bits_to_byte(bits):
+   return bits[0]*128 + bits[1]*64 + bits[2]*32 + bits[3]*16 + bits[4]*8 + bits[5]*4 + bits[6]*2 + bits[7]
+
+
+def get_modular_inverse(Q, R):
+    S = 0
+    while (R * S) % Q != 1:
+        S += 1
+    return S
 
 def main():
     private_key = generate_private_key()
+    print(private_key)
     public_key = create_public_key(private_key)
+    print(public_key)
+    encrypted = encrypt_mhkc("THEQUICKBROWNFOXJUMPSOVERTHELAZYBLUEDOG", public_key)
+    print(encrypted)
+    print(decrypt_mhkc(encrypted, private_key))
 
-    print(encrypt_mhkc("ZEBRA", public_key))
 
 if __name__ == "__main__":
     main()
